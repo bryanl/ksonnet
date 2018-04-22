@@ -201,20 +201,18 @@ func (p *Pipeline) moduleObjects(module component.Module, filter []string) ([]*u
 			componentType = "jsonnet"
 		}
 
-		var patched string
+		patched := string(data)
 
-		switch componentType {
-		case "jsonnet":
-			patched, err = params.EvaluateComponentSnippet(p.app, string(data), envParamData, p.envName, false)
+		if componentType == "jsonnet" {
+			patched, err = params.EvaluateComponentSnippet(p.app, patched, envParamData, p.envName, false)
 			if err != nil {
 				return nil, errors.Wrap(err, "patch Jsonnet component")
 			}
+		}
 
-		case "yaml":
-			patched, err = params.PatchJSON(string(data), envParamData, k)
-			if err != nil {
-				return nil, errors.Wrap(err, "patch YAML/JSON component")
-			}
+		patched, err = params.PatchJSON(patched, envParamData, k)
+		if err != nil {
+			return nil, errors.Wrap(err, "apply environment")
 		}
 
 		uns, _, err := unstructured.UnstructuredJSONScheme.Decode([]byte(patched), nil, nil)
