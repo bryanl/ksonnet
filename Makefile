@@ -40,7 +40,7 @@ INTEGRATION_TEST_FIXTURES = ./fixtures
 all: ks docs
 
 ks:
-	$(GO) build -o $(KS_BIN) $(GO_FLAGS) ./cmd/ks
+	CGO_ENABLED=0 $(GO) build -o $(KS_BIN) $(GO_FLAGS) ./cmd/ks
 
 docs:
 	$(DOC_GEN_FILE)
