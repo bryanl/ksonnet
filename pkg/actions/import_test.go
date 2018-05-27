@@ -31,6 +31,7 @@ import (
 	"github.com/ksonnet/ksonnet/pkg/app"
 	amocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
 	"github.com/ksonnet/ksonnet/pkg/prototype"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/require"
 )
 
@@ -64,7 +65,7 @@ func TestImport_http(t *testing.T) {
 
 		a.createComponentFn = func(_ app.App, name, text string, p params.Params, templateType prototype.TemplateType) (string, error) {
 			assert.Contains(t, name, "/service-my-service-")
-			assert.Equal(t, string(serviceData), text)
+			test.CompareStrings(t, string(serviceData), text)
 			assert.Equal(t, params.Params{}, p)
 			assert.Equal(t, prototype.YAML, templateType)
 
@@ -99,7 +100,7 @@ func TestImport_file(t *testing.T) {
 
 		a.createComponentFn = func(_ app.App, name, text string, p params.Params, templateType prototype.TemplateType) (string, error) {
 			assert.Contains(t, name, "/service-my-service-")
-			assert.Equal(t, string(serviceData), text)
+			test.CompareStrings(t, string(serviceData), text)
 			assert.Equal(t, params.Params{}, p)
 			assert.Equal(t, prototype.YAML, templateType)
 
@@ -133,7 +134,7 @@ func TestImport_directory(t *testing.T) {
 
 		a.createComponentFn = func(_ app.App, name, text string, p params.Params, templateType prototype.TemplateType) (string, error) {
 			assert.Contains(t, name, "/service-my-service-")
-			assert.Equal(t, string(serviceData), text)
+			test.CompareStrings(t, string(serviceData), text)
 			assert.Equal(t, params.Params{}, p)
 			assert.Equal(t, prototype.YAML, templateType)
 
