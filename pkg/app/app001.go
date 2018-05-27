@@ -100,6 +100,8 @@ func (a *App001) Environments() (EnvironmentSpecs, error) {
 			return nil
 		}
 
+		root = filepath.ToSlash(root)
+
 		if fi.Name() == app001specJSON {
 			dir := filepath.ToSlash(filepath.Dir(path))
 			envName := strings.TrimPrefix(dir, root+"/")

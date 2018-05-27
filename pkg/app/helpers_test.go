@@ -27,10 +27,15 @@ import (
 func stageFile(t *testing.T, fs afero.Fs, src, dest string) {
 	in := filepath.Join("testdata", src)
 
+	dest, err := filepath.Abs(dest)
+	require.NoError(t, err)
+
 	b, err := ioutil.ReadFile(in)
 	require.NoError(t, err)
 
-	dir := filepath.Dir(dest)
+	dir, err := filepath.Abs(filepath.Dir(dest))
+	require.NoError(t, err)
+
 	err = fs.MkdirAll(dir, 0755)
 	require.NoError(t, err)
 
