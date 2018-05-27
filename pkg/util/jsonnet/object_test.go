@@ -24,6 +24,7 @@ import (
 	"github.com/ksonnet/ksonnet-lib/ksonnet-gen/astext"
 	nm "github.com/ksonnet/ksonnet-lib/ksonnet-gen/nodemaker"
 	"github.com/ksonnet/ksonnet-lib/ksonnet-gen/printer"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -96,7 +97,7 @@ func TestSet(t *testing.T) {
 				err = printer.Fprint(&got, astObject)
 				require.NoError(t, err)
 
-				require.Equal(t, tc.expected, got.String())
+				test.CompareStrings(t, tc.expected, got.String())
 			}
 		})
 	}
