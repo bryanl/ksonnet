@@ -175,12 +175,9 @@ func TestJsonnet_SetParam(t *testing.T) {
 		err := c.SetParam([]string{"replicas"}, 4)
 		require.NoError(t, err)
 
-		b, err := afero.ReadFile(fs, "/app/components/params.libsonnet")
-		require.NoError(t, err)
-
-		expected := testdata(t, "guestbook/set-params.libsonnet")
-
-		require.Equal(t, string(expected), string(b))
+		test.AssertContents(t, fs,
+			"guestbook/set-params.libsonnet",
+			"/app/components/params.libsonnet")
 	})
 }
 
@@ -197,11 +194,8 @@ func TestJsonnet_DeleteParam(t *testing.T) {
 		err := c.DeleteParam([]string{"replicas"})
 		require.NoError(t, err)
 
-		b, err := afero.ReadFile(fs, "/app/components/params.libsonnet")
-		require.NoError(t, err)
-
-		expected := testdata(t, "guestbook/delete-params.libsonnet")
-
-		require.Equal(t, string(expected), string(b))
+		test.AssertContents(t, fs,
+			"guestbook/delete-params.libsonnet",
+			"/app/components/params.libsonnet")
 	})
 }

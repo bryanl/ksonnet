@@ -16,7 +16,6 @@
 package component
 
 import (
-	"io/ioutil"
 	"testing"
 
 	"github.com/ksonnet/ksonnet-lib/ksonnet-gen/astext"
@@ -150,10 +149,9 @@ func TestYAML_SetParam(t *testing.T) {
 		err := y.SetParam([]string{"spec", "version"}, "v2")
 		require.NoError(t, err)
 
-		b, err := afero.ReadFile(fs, "/params.libsonnet")
-		require.NoError(t, err)
-
-		test.AssertOutput(t, "updated-yaml-params.libsonnet", string(b))
+		test.AssertContents(t, fs,
+			"updated-yaml-params.libsonnet",
+			"/params.libsonnet")
 	})
 }
 
@@ -168,10 +166,9 @@ func TestYAML_DeleteParam(t *testing.T) {
 		err := y.DeleteParam([]string{"spec", "version"})
 		require.NoError(t, err)
 
-		b, err := afero.ReadFile(fs, "/params.libsonnet")
-		require.NoError(t, err)
-
-		test.AssertOutput(t, "params-delete-entry.libsonnet", string(b))
+		test.AssertContents(t, fs,
+			"params-delete-entry.libsonnet",
+			"/params.libsonnet")
 	})
 }
 
@@ -245,12 +242,6 @@ func Test_mapToPaths(t *testing.T) {
 
 	require.Equal(t, expected, got)
 
-}
-
-func testdata(t *testing.T, name string) []byte {
-	b, err := ioutil.ReadFile("testdata/" + name)
-	require.NoError(t, err, "read testdata %s", name)
-	return b
 }
 
 func TestYAML_ToNode(t *testing.T) {
