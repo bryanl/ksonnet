@@ -18,6 +18,7 @@ package app
 import (
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/blang/semver"
@@ -459,7 +460,9 @@ func assertContents(t *testing.T, fs afero.Fs, expectedPath, contentPath string)
 	got, err := afero.ReadFile(fs, contentPath)
 	require.NoError(t, err)
 
-	tf, err := ksstrings.Compare(string(expected), string(got))
+	tf, err := ksstrings.Compare(
+		strings.TrimSpace(string(expected)),
+		strings.TrimSpace(string(got)))
 
 	require.NoError(t, err)
 	require.True(t, tf)
