@@ -153,9 +153,7 @@ func TestYAML_SetParam(t *testing.T) {
 		b, err := afero.ReadFile(fs, "/params.libsonnet")
 		require.NoError(t, err)
 
-		expected := testdata(t, "updated-yaml-params.libsonnet")
-
-		require.Equal(t, string(expected), string(b))
+		test.AssertOutput(t, "updated-yaml-params.libsonnet", string(b))
 	})
 }
 
@@ -173,9 +171,7 @@ func TestYAML_DeleteParam(t *testing.T) {
 		b, err := afero.ReadFile(fs, "/params.libsonnet")
 		require.NoError(t, err)
 
-		expected := testdata(t, "params-delete-entry.libsonnet")
-
-		require.Equal(t, string(expected), string(b))
+		test.AssertOutput(t, "params-delete-entry.libsonnet", string(b))
 	})
 }
 

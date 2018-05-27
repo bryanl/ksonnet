@@ -105,5 +105,4 @@ func compareOutput(t *testing.T, fs afero.Fs, expected, got string) {
 	require.NoError(t, err)
 
 	test.AssertOutput(t, expected, string(gotData))
-	require.Equal(t, string(expectedData), string(gotData))
 }

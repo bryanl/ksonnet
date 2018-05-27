@@ -19,6 +19,7 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/require"
 )
 
@@ -29,8 +30,5 @@ func Test_applyGlobals(t *testing.T) {
 	got, err := applyGlobals(string(myParams))
 	require.NoError(t, err)
 
-	expected, err := ioutil.ReadFile("testdata/params-global-expected.json")
-	require.NoError(t, err)
-
-	require.Equal(t, string(expected), got)
+	test.AssertOutput(t, "params-global-expected.json", got)
 }

@@ -18,6 +18,7 @@ package test
 import (
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -49,5 +50,7 @@ func AssertContents(t *testing.T, fs afero.Fs, expectedPath, contentPath string)
 	got, err := afero.ReadFile(fs, contentPath)
 	require.NoError(t, err)
 
-	assert.Equal(t, string(expected), string(got), "unexpected %q contents", contentPath)
+	CompareStrings(t,
+		strings.TrimSpace(string(expected)),
+		strings.TrimSpace(string(got)))
 }
