@@ -119,12 +119,12 @@ func AssertOutput(t *testing.T, filename, actual string) {
 	b, err := ioutil.ReadFile(path)
 	require.NoError(t, err, "read expected")
 
-	CompareStrings(t, strings.TrimSpace(string(b)), strings.TrimSpace(actual))
+	CompareStrings(t, string(b), actual)
 }
 
 // CompareStrings compares two strings.
 func CompareStrings(t *testing.T, expected, got string) {
-	tf, err := ksstrings.Compare(expected, got)
+	tf, err := ksstrings.Compare(strings.TrimSpace(expected), strings.TrimSpace(got))
 	require.NoError(t, err)
 	require.True(t, tf)
 }
