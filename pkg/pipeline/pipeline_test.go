@@ -25,6 +25,7 @@ import (
 	appmocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
 	"github.com/ksonnet/ksonnet/pkg/component"
 	cmocks "github.com/ksonnet/ksonnet/pkg/component/mocks"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
@@ -199,10 +200,7 @@ func TestPipeline_YAML(t *testing.T) {
 		got, err := ioutil.ReadAll(r)
 		require.NoError(t, err)
 
-		expected, err := ioutil.ReadFile(filepath.Join("testdata", "service.yaml"))
-		require.NoError(t, err)
-
-		require.Equal(t, string(expected), string(got))
+		test.AssertOutput(t, "service.yaml", string(got))
 	})
 }
 
