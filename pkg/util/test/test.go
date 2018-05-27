@@ -16,8 +16,6 @@
 package test
 
 import (
-	"bufio"
-	"bytes"
 	"io"
 	"io/ioutil"
 	"os"
@@ -26,7 +24,7 @@ import (
 	"testing"
 
 	"github.com/ksonnet/ksonnet/pkg/app/mocks"
-	godiff "github.com/shazow/go-diff"
+	ksstrings "github.com/ksonnet/ksonnet/pkg/util/strings"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -121,59 +119,7 @@ func AssertOutput(t *testing.T, filename, actual string) {
 	b, err := ioutil.ReadFile(path)
 	require.NoError(t, err, "read expected")
 
-	CompareStrings(t, strings.TrimSpace(string(b)), strings.TrimSpace(actual))
-}
-
-func CompareStrings(t *testing.T, expected, got string) {
-	expected = scanString(t, strings.NewReader(expected))
-	got = scanString(t, strings.NewReader(got))
-
-	rExpected := strings.NewReader(expected)
-	rGot := strings.NewReader(got)
-
-	var buf bytes.Buffer
-	err := godiff.DefaultDiffer().Diff(&buf, rExpected, rGot)
+	tf, err := ksstrings.Compare(strings.TrimSpace(string(b)), strings.TrimSpace(actual))
 	require.NoError(t, err)
-	require.Empty(t, buf.String())
-}
-
-func scanString(t *testing.T, r io.Reader) string {
-	scanner := bufio.NewScanner(r)
-
-	scanner.Split(scanCRLF)
-
-	var lines []string
-
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-
-	require.NoError(t, scanner.Err(), "scanner error")
-
-	return strings.Join(lines, "\n")
-}
-
-// dropCR drops a terminal \r from the data.
-func dropCR(data []byte) []byte {
-	if len(data) > 0 && data[len(data)-1] == '\r' {
-		return data[0 : len(data)-1]
-	}
-	return data
-}
-
-// scanCRLF scans for Windows style line endings.
-func scanCRLF(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	if atEOF && len(data) == 0 {
-		return 0, nil, nil
-	}
-	if i := bytes.Index(data, []byte{'\r', '\n'}); i >= 0 {
-		// We have a full newline-terminated line.
-		return i + 2, dropCR(data[0:i]), nil
-	}
-	// If we're at EOF, we have a final, non-terminated line. Return it.
-	if atEOF {
-		return len(data), dropCR(data), nil
-	}
-	// Request more data.
-	return 0, nil, nil
+	require.True(t, tf)
 }

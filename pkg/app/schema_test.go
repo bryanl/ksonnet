@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/blang/semver"
+	ksstrings "github.com/ksonnet/ksonnet/pkg/util/strings"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -458,5 +459,8 @@ func assertContents(t *testing.T, fs afero.Fs, expectedPath, contentPath string)
 	got, err := afero.ReadFile(fs, contentPath)
 	require.NoError(t, err)
 
-	require.Equal(t, string(expected), string(got), "unexpected %q contents", contentPath)
+	tf, err := ksstrings.Compare(string(expected), string(got))
+
+	require.NoError(t, err)
+	require.True(t, tf)
 }

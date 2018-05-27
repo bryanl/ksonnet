@@ -21,6 +21,7 @@ import (
 	"strings"
 	"testing"
 
+	ksstrings "github.com/ksonnet/ksonnet/pkg/util/strings"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -50,7 +51,10 @@ func AssertContents(t *testing.T, fs afero.Fs, expectedPath, contentPath string)
 	got, err := afero.ReadFile(fs, contentPath)
 	require.NoError(t, err)
 
-	CompareStrings(t,
+	tf, err := ksstrings.Compare(
 		strings.TrimSpace(string(expected)),
 		strings.TrimSpace(string(got)))
+
+	require.NoError(t, err)
+	require.True(t, tf)
 }
