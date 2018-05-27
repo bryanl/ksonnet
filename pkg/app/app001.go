@@ -255,7 +255,7 @@ func read001EnvSpec(fs afero.Fs, name, path string) (*EnvironmentSpec, error) {
 	}
 
 	spec := EnvironmentSpec{
-		Path:              name,
+		Path:              filepath.ToSlash(name),
 		Destination:       &s,
 		KubernetesVersion: ks.Info.Version,
 	}
