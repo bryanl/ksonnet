@@ -24,6 +24,7 @@ import (
 	amocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
 	"github.com/ksonnet/ksonnet/pkg/component"
 	"github.com/ksonnet/ksonnet/pkg/component/mocks"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
@@ -75,7 +76,7 @@ func TestParamDiff(t *testing.T) {
 		err = a.Run()
 		require.NoError(t, err)
 
-		assertOutput(t, filepath.Join("param", "diff", "output.txt"), buf.String())
+		test.AssertOutput(t, filepath.Join("param", "diff", "output.txt"), buf.String())
 	})
 }
 

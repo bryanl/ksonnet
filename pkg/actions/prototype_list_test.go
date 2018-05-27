@@ -21,6 +21,7 @@ import (
 
 	"github.com/ksonnet/ksonnet/pkg/app"
 	amocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/require"
 )
 
@@ -43,7 +44,7 @@ func TestPrototypeList(t *testing.T) {
 		err = a.Run()
 		require.NoError(t, err)
 
-		assertOutput(t, "prototype/list/output.txt", buf.String())
+		test.AssertOutput(t, "prototype/list/output.txt", buf.String())
 	})
 }
 

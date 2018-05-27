@@ -22,6 +22,7 @@ import (
 	amocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
 	"github.com/ksonnet/ksonnet/pkg/component"
 	cmocks "github.com/ksonnet/ksonnet/pkg/component/mocks"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
@@ -59,7 +60,7 @@ func TestComponentList(t *testing.T) {
 		err = a.Run()
 		require.NoError(t, err)
 
-		assertOutput(t, "component/list/output.txt", buf.String())
+		test.AssertOutput(t, "component/list/output.txt", buf.String())
 	})
 }
 
@@ -101,7 +102,7 @@ func TestComponentList_json(t *testing.T) {
 		err = a.Run()
 		require.NoError(t, err)
 
-		assertOutput(t, "component/list/json.txt", buf.String())
+		test.AssertOutput(t, "component/list/json.txt", buf.String())
 	})
 }
 
@@ -143,7 +144,7 @@ func TestComponentList_wide(t *testing.T) {
 		err = a.Run()
 		require.NoError(t, err)
 
-		assertOutput(t, "component/list/wide.txt", buf.String())
+		test.AssertOutput(t, "component/list/wide.txt", buf.String())
 	})
 }
 

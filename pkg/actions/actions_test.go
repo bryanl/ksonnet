@@ -249,15 +249,6 @@ func withApp(t *testing.T, fn func(*mocks.App)) {
 	fn(appMock)
 }
 
-func assertOutput(t *testing.T, filename, actual string) {
-	require.NotEmpty(t, filename, "filename can not be empty")
-	path := filepath.Join("testdata", filename)
-	b, err := ioutil.ReadFile(path)
-	require.NoError(t, err)
-
-	require.Equal(t, string(b), actual)
-}
-
 func stageFile(t *testing.T, fs afero.Fs, src, dest string) {
 	in := filepath.Join("testdata", src)
 

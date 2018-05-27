@@ -22,6 +22,7 @@ import (
 	"github.com/ksonnet/ksonnet/pkg/app"
 	amocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
 	"github.com/ksonnet/ksonnet/pkg/registry"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/require"
 )
 
@@ -61,7 +62,7 @@ func TestPkgList(t *testing.T) {
 		err = a.Run()
 		require.NoError(t, err)
 
-		assertOutput(t, "pkg/list/output.txt", buf.String())
+		test.AssertOutput(t, "pkg/list/output.txt", buf.String())
 	})
 }
 

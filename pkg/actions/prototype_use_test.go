@@ -22,6 +22,7 @@ import (
 	"github.com/ksonnet/ksonnet/pkg/app"
 	amocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
 	"github.com/ksonnet/ksonnet/pkg/prototype"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -50,7 +51,7 @@ func TestPrototypeUse(t *testing.T) {
 
 		a.createComponentFn = func(_ app.App, name string, text string, params param.Params, template prototype.TemplateType) (string, error) {
 			assert.Equal(t, "myDeployment", name)
-			assertOutput(t, "prototype/use/text.txt", text)
+			test.AssertOutput(t, "prototype/use/text.txt", text)
 
 			expectedParams := param.Params{
 				"name":          `"myDeployment"`,

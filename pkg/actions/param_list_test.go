@@ -24,6 +24,7 @@ import (
 	amocks "github.com/ksonnet/ksonnet/pkg/app/mocks"
 	"github.com/ksonnet/ksonnet/pkg/component"
 	cmocks "github.com/ksonnet/ksonnet/pkg/component/mocks"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -132,7 +133,7 @@ func TestParamList(t *testing.T) {
 				err = a.Run()
 				require.NoError(t, err)
 
-				assertOutput(t, tc.outputFile, buf.String())
+				test.AssertOutput(t, tc.outputFile, buf.String())
 			})
 		}
 	})
