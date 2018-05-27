@@ -101,7 +101,7 @@ func (a *App001) Environments() (EnvironmentSpecs, error) {
 		}
 
 		if fi.Name() == app001specJSON {
-			dir := filepath.Dir(path)
+			dir := filepath.ToSlash(filepath.Dir(path))
 			envName := strings.TrimPrefix(dir, root+"/")
 			spec, err := read001EnvSpec(a.fs, envName, path)
 			if err != nil {
