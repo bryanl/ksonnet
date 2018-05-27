@@ -318,7 +318,7 @@ func Test_update(t *testing.T) {
 				}
 
 				require.NoError(t, err)
-				assert.Equal(t, tc.expected, got)
+				test.CompareStrings(t, tc.expected, got)
 			})
 		})
 	}

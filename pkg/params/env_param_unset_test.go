@@ -53,8 +53,7 @@ func TestEnvParamRemover(t *testing.T) {
 			got, err := epu.Unset(componentName, paramName, snippet)
 			require.NoError(t, err)
 
-			expected := test.ReadTestData(t, tc.output)
-			require.Equal(t, expected, got)
+			test.AssertOutput(t, tc.output, got)
 		})
 	}
 }
