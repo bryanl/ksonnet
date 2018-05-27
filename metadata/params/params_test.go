@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -1148,7 +1149,7 @@ func TestDeleteEnvironmentParams(t *testing.T) {
 			expected := readSnippet(t, tc.expectedPath...)
 
 			require.NoError(t, err)
-			assert.Equal(t, expected, updated)
+			test.CompareStrings(t, expected, updated)
 		})
 	}
 }
