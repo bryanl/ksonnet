@@ -17,11 +17,9 @@ package table
 
 import (
 	"bytes"
-	"io/ioutil"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 )
 
 func TestTable(t *testing.T) {
@@ -37,10 +35,7 @@ func TestTable(t *testing.T) {
 
 	table.Render()
 
-	b, err := ioutil.ReadFile("testdata/table.txt")
-	require.NoError(t, err)
-
-	assert.Equal(t, string(b), buf.String())
+	test.AssertOutput(t, "table.txt", buf.String())
 }
 
 func TestTable_no_header(t *testing.T) {
@@ -55,10 +50,7 @@ func TestTable_no_header(t *testing.T) {
 
 	table.Render()
 
-	b, err := ioutil.ReadFile("testdata/table_no_header.txt")
-	require.NoError(t, err)
-
-	assert.Equal(t, string(b), buf.String())
+	test.AssertOutput(t, "table_no_header.txt", buf.String())
 }
 
 func TestTable_trim_space(t *testing.T) {
@@ -74,9 +66,5 @@ func TestTable_trim_space(t *testing.T) {
 
 	table.Render()
 
-	b, err := ioutil.ReadFile("testdata/table_trim_space.txt")
-	require.NoError(t, err)
-
-	assert.Equal(t, string(b), buf.String())
-
+	test.AssertOutput(t, "table_trim_space.txt", buf.String())
 }
