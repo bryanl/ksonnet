@@ -224,17 +224,21 @@ func cleanEnv(fs afero.Fs, root string) error {
 }
 
 func findRoot(fs afero.Fs, cwd string) (string, error) {
+	cwd = filepath.FromSlash(cwd)
 	prev := cwd
 
 	for {
-		path := filepath.Join(cwd, appYamlName)
+		path, err := filepath.Abs(filepath.Join(cwd, appYamlName))
+		if err != nil {
+			return "", err
+		}
 		exists, err := afero.Exists(fs, path)
 		if err != nil {
 			return "", err
 		}
 
 		if exists {
-			return cwd, nil
+			return filepath.Abs(cwd)
 		}
 
 		cwd, err = filepath.Abs(filepath.Join(cwd, ".."))
@@ -243,7 +247,7 @@ func findRoot(fs afero.Fs, cwd string) (string, error) {
 		}
 
 		if cwd == prev {
-			return "", errors.Errorf("unable to find ksonnet project")
+			return "", errors.Errorf("unable to find ksonnet project on filesystem")
 		}
 
 		prev = cwd

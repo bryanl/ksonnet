@@ -16,6 +16,7 @@
 package app
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -32,6 +33,7 @@ func Test_findRoot(t *testing.T) {
 	}
 
 	for _, dir := range dirs {
+		dir = filepath.FromSlash(dir)
 		err := fs.MkdirAll(dir, DefaultFilePermissions)
 		require.NoError(t, err)
 	}
@@ -66,9 +68,12 @@ func Test_findRoot(t *testing.T) {
 				require.Error(t, err)
 				return
 			}
-
 			require.NoError(t, err)
-			require.Equal(t, tc.expected, root)
+
+			expected, err := filepath.Abs(filepath.FromSlash(tc.expected))
+			require.NoError(t, err)
+
+			require.Equal(t, expected, root)
 		})
 	}
 
