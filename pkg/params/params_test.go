@@ -17,11 +17,13 @@ package params
 
 import (
 	"io"
+	"strings"
 	"testing"
 
 	"github.com/google/go-jsonnet/ast"
 	"github.com/ksonnet/ksonnet-lib/ksonnet-gen/astext"
 	nm "github.com/ksonnet/ksonnet-lib/ksonnet-gen/nodemaker"
+	ksstrings "github.com/ksonnet/ksonnet/pkg/util/strings"
 	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -318,7 +320,12 @@ func Test_update(t *testing.T) {
 				}
 
 				require.NoError(t, err)
-				test.CompareStrings(t, tc.expected, got)
+				tf, err := ksstrings.Compare(
+					strings.TrimSpace(tc.expected),
+					strings.TrimSpace(got))
+
+				require.NoError(t, err)
+				require.True(t, tf)
 			})
 		})
 	}

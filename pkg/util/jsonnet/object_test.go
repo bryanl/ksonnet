@@ -18,13 +18,14 @@ package jsonnet
 import (
 	"bytes"
 	"io/ioutil"
+	"strings"
 	"testing"
 
 	"github.com/google/go-jsonnet/ast"
 	"github.com/ksonnet/ksonnet-lib/ksonnet-gen/astext"
 	nm "github.com/ksonnet/ksonnet-lib/ksonnet-gen/nodemaker"
 	"github.com/ksonnet/ksonnet-lib/ksonnet-gen/printer"
-	"github.com/ksonnet/ksonnet/pkg/util/test"
+	ksstrings "github.com/ksonnet/ksonnet/pkg/util/strings"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -97,7 +98,12 @@ func TestSet(t *testing.T) {
 				err = printer.Fprint(&got, astObject)
 				require.NoError(t, err)
 
-				test.CompareStrings(t, tc.expected, got.String())
+				tf, err := ksstrings.Compare(
+					strings.TrimSpace(tc.expected),
+					strings.TrimSpace(got.String()))
+
+				require.NoError(t, err)
+				require.True(t, tf)
 			}
 		})
 	}
