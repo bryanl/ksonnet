@@ -23,6 +23,7 @@ import (
 
 	"github.com/ksonnet/ksonnet/pkg/app"
 	"github.com/ksonnet/ksonnet/pkg/app/mocks"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 )
@@ -103,8 +104,6 @@ func compareOutput(t *testing.T, fs afero.Fs, expected, got string) {
 	gotData, err := afero.ReadFile(fs, got)
 	require.NoError(t, err)
 
-	expectedData, err := ioutil.ReadFile(filepath.Join("testdata", expected))
-	require.NoError(t, err)
-
+	test.AssertOutput(t, expected, string(gotData))
 	require.Equal(t, string(expectedData), string(gotData))
 }
