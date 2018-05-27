@@ -52,8 +52,7 @@ func TestEnvComponentRemover(t *testing.T) {
 			got, err := ecr.Remove(componentName, snippet)
 			require.NoError(t, err)
 
-			expected := test.ReadTestData(t, tc.output)
-			require.Equal(t, expected, got)
+			test.AssertOutput(t, tc.output, got)
 		})
 	}
 

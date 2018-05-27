@@ -50,8 +50,7 @@ func TestEnvGlobalsSet(t *testing.T) {
 			got, err := egs.Set(snippet, tc.params)
 			require.NoError(t, err)
 
-			expected := test.ReadTestData(t, tc.output)
-			require.Equal(t, expected, got)
+			test.AssertOutput(t, tc.output, got)
 		})
 	}
 }

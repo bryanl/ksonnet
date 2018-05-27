@@ -47,8 +47,7 @@ func TestEnvGlobalsUnset(t *testing.T) {
 			got, err := egu.Unset(tc.paramName, snippet)
 			require.NoError(t, err)
 
-			expected := test.ReadTestData(t, tc.output)
-			require.Equal(t, expected, got)
+			test.AssertOutput(t, tc.output, got)
 		})
 	}
 }
