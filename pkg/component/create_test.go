@@ -92,7 +92,7 @@ func Test_Create(t *testing.T) {
 			ksApp.On("Fs").Return(fs)
 			ksApp.On("Root").Return(root)
 
-			name := filepath.Join(tc.ns, tc.componentName)
+			name := filepath.ToSlash(filepath.Join(tc.ns, tc.componentName))
 
 			path, err := Create(ksApp, name, "content", tc.params, tc.templateType)
 			if tc.isErr {
