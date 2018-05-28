@@ -278,7 +278,7 @@ func withApp001Fs(t *testing.T, appName string, fn func(app *App001)) {
 	}
 
 	for _, dir := range envDirs {
-		path := filepath.Join("/environments", dir)
+		path := filepath.FromSlash(filepath.Join("/environments", dir))
 		err = fs.MkdirAll(path, DefaultFolderPermissions)
 		require.NoError(t, err)
 
