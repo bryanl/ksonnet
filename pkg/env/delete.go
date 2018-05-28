@@ -46,25 +46,21 @@ func newDeleter(a app.App, name string, override bool) (*deleter, error) {
 }
 
 func (d *deleter) Delete() error {
-	envPath, err := filepath.Abs(filepath.Join(d.app.Root(), envRootName, d.name))
-	if err != nil {
-		return err
-	}
+	envPath := filepath.Join(d.app.Root(), envRootName, d.name)
 
 	log.Infof("Deleting environment %q with metadata at path %q", d.name, envPath)
 
 	// Remove the directory and all files within the environment path.
-	if err = d.app.Fs().RemoveAll(envPath); err != nil {
-		// if err = d.cleanEmptyParentDirs(); err != nil {
+	if err := d.app.Fs().RemoveAll(envPath); err != nil {
 		log.Debugf("Failed to remove environment directory at path %q", envPath)
 		return err
 	}
 
-	if err = d.app.RemoveEnvironment(d.name, d.override); err != nil {
+	if err := d.app.RemoveEnvironment(d.name, d.override); err != nil {
 		return err
 	}
 
-	if err = cleanEmptyDirs(d.app); err != nil {
+	if err := cleanEmptyDirs(d.app); err != nil {
 		return err
 	}
 
