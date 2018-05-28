@@ -316,12 +316,12 @@ func Modules(a app.App) ([]Module, error) {
 
 // Components returns the components in a module.
 func (m *FilesystemModule) Components() ([]Component, error) {
-	parts := strings.Split(m.path, "/")
+	parts := strings.Split(filepath.ToSlash(m.path), "/")
 	moduleDir := filepath.Join(append([]string{m.app.Root(), componentsRoot}, parts...)...)
 
 	fis, err := afero.ReadDir(m.app.Fs(), moduleDir)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "reading contents of module dir %q", moduleDir)
 	}
 
 	var components []Component

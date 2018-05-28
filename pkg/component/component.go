@@ -76,6 +76,7 @@ const (
 // LocateComponent locates a component given a module and a name.
 func LocateComponent(ksApp app.App, module, name string) (Component, error) {
 	path := make([]string, 0)
+	module = filepath.ToSlash(module)
 	if module != "" && module != "/" {
 		path = append(path, module)
 	}
@@ -121,10 +122,10 @@ func Path(a app.App, name string) (string, error) {
 
 // ExtractComponent extracts a component from a path.
 func ExtractComponent(a app.App, path string) (Component, error) {
-	ns, componentName := ExtractModuleComponent(a, path)
-	members, err := ns.Components()
+	module, componentName := ExtractModuleComponent(a, path)
+	members, err := module.Components()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "listing modules for component")
 	}
 
 	for _, member := range members {

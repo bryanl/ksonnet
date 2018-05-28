@@ -16,7 +16,6 @@
 package component
 
 import (
-	"path"
 	"path/filepath"
 	"strings"
 
@@ -30,13 +29,13 @@ import (
 func ResolvePath(ksApp app.App, path string) (Module, Component, error) {
 	isDir, err := isComponentDir2(ksApp, path)
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "check for namespace directory")
+		return nil, nil, errors.Wrap(err, "checking for namespace directory")
 	}
 
 	if isDir {
 		ns, err := GetModule(ksApp, path)
 		if err != nil {
-			return nil, nil, err
+			return nil, nil, errors.Wrap(err, "retrieving module by path")
 		}
 
 		return ns, nil, nil
@@ -44,17 +43,17 @@ func ResolvePath(ksApp app.App, path string) (Module, Component, error) {
 
 	module, cName, err := checkComponent(ksApp, path)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.Wrap(err, "checking component path")
 	}
 
 	ns, err := GetModule(ksApp, module)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.Wrap(err, "retrieving module by name")
 	}
 
 	c, err := LocateComponent(ksApp, module, cName)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.Wrap(err, "locating component in module")
 	}
 
 	return ns, c, nil
@@ -105,7 +104,7 @@ func (dm *defaultManager) CreateComponent(ksApp app.App, name, text string, para
 }
 
 func (dm *defaultManager) CreateModule(ksApp app.App, name string) error {
-	parts := strings.Split(name, "/")
+	parts := strings.Split(filepath.ToSlash(name), "/")
 	dir := filepath.Join(append([]string{ksApp.Root(), "components"}, parts...)...)
 
 	if err := ksApp.Fs().MkdirAll(dir, app.DefaultFolderPermissions); err != nil {
@@ -117,7 +116,7 @@ func (dm *defaultManager) CreateModule(ksApp app.App, name string) error {
 }
 
 func isComponentDir2(ksApp app.App, path string) (bool, error) {
-	parts := strings.Split(path, "/")
+	parts := strings.Split(filepath.ToSlash(path), "/")
 	dir := filepath.Join(append([]string{ksApp.Root(), componentsRoot}, parts...)...)
 	dir = filepath.Clean(dir)
 
@@ -125,7 +124,7 @@ func isComponentDir2(ksApp app.App, path string) (bool, error) {
 }
 
 func checkComponent(ksApp app.App, name string) (string, string, error) {
-	parts := strings.Split(name, "/")
+	parts := strings.Split(filepath.ToSlash(name), "/")
 	base := filepath.Join(append([]string{ksApp.Root(), componentsRoot}, parts...)...)
 	base = filepath.Clean(base)
 
@@ -137,8 +136,9 @@ func checkComponent(ksApp app.App, name string) (string, string, error) {
 		}
 
 		if exists {
-			dir, file := path.Split(base)
-			module := strings.TrimPrefix(dir, path.Join(ksApp.Root(), componentsRoot))
+			dir, file := filepath.Split(base)
+			module := filepath.ToSlash(
+				strings.TrimPrefix(dir, filepath.Join(ksApp.Root(), componentsRoot)))
 			if len(module) > 0 {
 				module = strings.TrimSuffix(module, "/")
 			}
