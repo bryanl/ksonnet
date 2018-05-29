@@ -55,9 +55,9 @@ func withRFS(t *testing.T, relPath bool, fn func(*Fs, *mocks.App, afero.Fs)) {
 			return err
 		}
 
-		newPath := filepath.Join("/work", "local", strings.TrimPrefix(path, partRoot))
+		newPath := filepath.Join(uri, strings.TrimPrefix(path, partRoot))
 		if fi.IsDir() {
-			return fs.MkdirAll(newPath, 0750)
+			return fs.MkdirAll(newPath, 0755)
 		}
 
 		data, err := ioutil.ReadFile(path)
@@ -93,7 +93,7 @@ func TestFs_Protocol(t *testing.T) {
 
 func TestFs_URI(t *testing.T) {
 	withRFS(t, false, func(rfs *Fs, appMock *mocks.App, fs afero.Fs) {
-		assert.Equal(t, "/work/local", rfs.URI())
+		assert.Equal(t, filepath.FromSlash("/work/local"), rfs.URI())
 	})
 }
 
@@ -105,7 +105,7 @@ func TestFs_RegistrySpecDir(t *testing.T) {
 
 func TestFs_RegistrySpecFilePath(t *testing.T) {
 	withRFS(t, false, func(rfs *Fs, appMock *mocks.App, fs afero.Fs) {
-		assert.Equal(t, "/work/local/registry.yaml", rfs.RegistrySpecFilePath())
+		assert.Equal(t, "/work/local/registry.yaml", filepath.ToSlash(rfs.RegistrySpecFilePath()))
 	})
 }
 
@@ -260,12 +260,20 @@ func TestFs_ResolveLibrary(t *testing.T) {
 			"/apache/parts.yaml",
 			"/apache/prototypes/apache-simple.jsonnet",
 		}
+
+		for i := range expectedFiles {
+			expectedFiles[i] = filepath.FromSlash(expectedFiles[i])
+		}
 		assert.Equal(t, expectedFiles, files)
 
 		expectedDirs := []string{
 			"/apache",
 			"/apache/examples",
 			"/apache/prototypes",
+		}
+
+		for i := range expectedDirs {
+			expectedDirs[i] = filepath.FromSlash(expectedDirs[i])
 		}
 		assert.Equal(t, expectedDirs, directories)
 

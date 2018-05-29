@@ -67,7 +67,7 @@ func buildContent(t *testing.T, name string) *github.RepositoryContent {
 	data, err := ioutil.ReadFile(path)
 	require.NoError(t, err)
 
-	path = strings.TrimPrefix(path, "testdata/part/")
+	path = strings.TrimPrefix(filepath.ToSlash(path), "testdata/part/")
 
 	rc := &github.RepositoryContent{
 		Type:    github.String("file"),
@@ -93,7 +93,8 @@ func buildContentDir(t *testing.T, name string) []*github.RepositoryContent {
 	require.NoError(t, err)
 
 	for _, fi = range fis {
-		childPath := filepath.Join(strings.TrimPrefix(path, "testdata/"), fi.Name())
+		childPath := filepath.Join(strings.TrimPrefix(path, "testdata"+string(filepath.Separator)), fi.Name())
+		childPath = filepath.ToSlash(childPath)
 
 		if fi.IsDir() {
 			rc := &github.RepositoryContent{
@@ -281,7 +282,7 @@ func mockPartFs(t *testing.T, repo ghutil.Repo, ghMock *mocks.GitHub, name, sha1
 
 		if fi.IsDir() {
 			rcs := buildContentDir(t, path)
-			path = strings.TrimPrefix(path, filepath.Join("testdata", "part"))
+			path = filepath.ToSlash(strings.TrimPrefix(path, filepath.Join("testdata", "part")))
 			path = strings.TrimPrefix(path, "/")
 
 			ghMock.On("Contents", mock.Anything, repo, path, sha1).Return(nil, rcs, nil)
@@ -289,6 +290,7 @@ func mockPartFs(t *testing.T, repo ghutil.Repo, ghMock *mocks.GitHub, name, sha1
 		}
 
 		rc := buildContent(t, path)
+		path = filepath.ToSlash(path)
 		path = strings.TrimPrefix(path, "testdata/part/")
 		ghMock.On("Contents", mock.Anything, repo, path, sha1).Return(rc, nil, nil)
 		return nil
@@ -305,7 +307,7 @@ func TestGithub_ResolveLibrary(t *testing.T) {
 
 	ghMock.On("CommitSHA1", mock.Anything, repo, "54321").Return("54321", nil)
 
-	partName := filepath.Join("incubator", "apache")
+	partName := strings.Join([]string{"incubator", "apache"}, "/")
 	mockPartFs(t, repo, ghMock, partName, "54321")
 
 	var files []string

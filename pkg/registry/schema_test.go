@@ -21,6 +21,7 @@ import (
 
 	"github.com/blang/semver"
 	"github.com/ksonnet/ksonnet/pkg/app"
+	"github.com/ksonnet/ksonnet/pkg/util/test"
 	"github.com/stretchr/testify/require"
 )
 
@@ -65,13 +66,10 @@ func TestSpec_Marshal(t *testing.T) {
 		},
 	}
 
-	expected, err := ioutil.ReadFile("testdata/registry.yaml")
-	require.NoError(t, err)
-
 	data, err := spec.Marshal()
 	require.NoError(t, err)
 
-	require.Equal(t, string(expected), string(data))
+	test.AssertOutput(t, "registry.yaml", string(data))
 }
 
 func Test_ApiVersionValidate(t *testing.T) {

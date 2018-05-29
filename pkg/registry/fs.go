@@ -72,7 +72,7 @@ func (fs *Fs) Protocol() Protocol {
 
 // URI is the registry URI.
 func (fs *Fs) URI() string {
-	return fs.spec.URI
+	return filepath.FromSlash(fs.spec.URI)
 }
 
 // RegistrySpecDir is the registry directory.
@@ -96,19 +96,14 @@ func (fs *Fs) FetchRegistrySpec() (*Spec, error) {
 	}).Debug("fetching registry spec")
 
 	configPath := fs.RegistrySpecFilePath()
-	path := filepath.Join(fs.app.Root(), configPath)
-	if filepath.IsAbs(configPath) {
-		var err error
-		path, err = filepath.Rel(fs.app.Root(), configPath)
-		if err != nil {
-			return nil, errors.Wrap(err, "unable to create path from relative filesystem path")
-		}
-		path = filepath.Join(fs.app.Root(), path)
+	path := filepath.ToSlash(configPath)
+	if !strings.HasPrefix(path, "/") {
+		path = filepath.Join(fs.app.Root(), configPath)
 	}
 
 	data, err := afero.ReadFile(fs.app.Fs(), path)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "reading %s", path)
 	}
 
 	return Unmarshal(data)

@@ -264,6 +264,7 @@ func (gh *GitHub) ResolveLibrary(partName, partAlias, libRefSpec string, onFile 
 
 	// Resolve directories and files.
 	path := strings.Join([]string{gh.hd.regRepoPath, partName}, "/")
+	path = filepath.ToSlash(path)
 	err = gh.resolveDir(partName, path, resolvedSHA, onFile, onDir)
 	if err != nil {
 		return nil, nil, err
